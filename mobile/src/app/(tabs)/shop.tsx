@@ -40,7 +40,17 @@ export default function ShopScreen() {
     <View style={[styles.container, { paddingTop: insets.top }]}>
       {/* Search + categories in one tight block */}
       <View style={styles.header}>
-        <ProductSearch value={search} onChangeText={setSearch} />
+        <View
+          style={[
+            styles.searchContainer,
+            {
+              paddingLeft: Spacing.base + insets.left,
+              paddingRight: Spacing.base + insets.right,
+            },
+          ]}
+        >
+          <ProductSearch value={search} onChangeText={setSearch} />
+        </View>
         <CategoryTabs
           categories={categories}
           selected={selectedCategory}
@@ -96,6 +106,9 @@ const styles = StyleSheet.create({
     gap: Spacing.xs,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: Colors.border,
+  },
+  searchContainer: {
+    paddingHorizontal: Spacing.base,
   },
   fetchingIndicator: { marginVertical: Spacing.xs },
   scroll: { flex: 1 },

@@ -1,0 +1,28 @@
+{
+  "cli": {
+    "version": ">= 19.0.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "apk": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_BASE_URL": "https://full-stack-ecom-backend.bonto.run",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://dekrjvlxwxoxwjosmwss.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRla3Jqdmx4d3hveHdqb3Ntd3NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxOTMxNDYsImV4cCI6MjA5NDc2OTE0Nn0.s1EAWqZNg6JkCW_RuizDUh5eiG51Bv8b8a7xTEmQCtM"
+      }
+    },
+    "production": {
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_BASE_URL": "https://full-stack-ecom-backend.bonto.run",
+        "EXPO_PUBLIC_SUPABASE_URL": "https://dekrjvlxwxoxwjosmwss.supabase.co",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRla3Jqdmx4d3hveHdqb3Ntd3NzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzkxOTMxNDYsImV4cCI6MjA5NDc2OTE0Nn0.s1EAWqZNg6JkCW_RuizDUh5eiG51Bv8b8a7xTEmQCtM"
+      }
+    }
+  }
+}

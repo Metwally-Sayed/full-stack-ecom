@@ -62,7 +62,7 @@ export function useRealtimeSubscriptions() {
         return;
       }
 
-      supabaseClient.realtime.setAuth(accessToken);
+      await supabaseClient.setAuth(accessToken);
 
       const channel = supabaseClient
         .channel('mobile-store-realtime')
