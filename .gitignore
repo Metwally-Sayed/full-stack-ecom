@@ -10,6 +10,7 @@ dist/
 **/node_modules/
 **/dist/
 **/supabase/.temp/
+docs/superpowers/
 .agent/
 .mcp/
 .mcp.json
