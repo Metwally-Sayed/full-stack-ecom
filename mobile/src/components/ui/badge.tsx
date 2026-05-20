@@ -1,7 +1,7 @@
 import { StyleSheet, View, type TextStyle, type ViewStyle } from 'react-native';
 import { Text } from './text';
-import { Colors } from '@/constants/colors';
 import { BorderRadius, FontSize, Spacing } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 import type { OrderStatus } from '@/types/order';
 
 type BadgeVariant = 'default' | 'success' | 'warning' | 'error' | 'info';
@@ -12,26 +12,26 @@ type BadgeProps = {
   style?: ViewStyle;
 };
 
-const bgStyles: Record<BadgeVariant, ViewStyle> = {
-  default: { backgroundColor: Colors.backgroundElement },
-  success: { backgroundColor: Colors.successLight },
-  warning: { backgroundColor: Colors.warningLight },
-  error: { backgroundColor: Colors.errorLight },
-  info: { backgroundColor: Colors.infoLight },
-};
-
-const textStyles: Record<BadgeVariant, TextStyle> = {
-  default: { color: Colors.textSecondary },
-  success: { color: Colors.success },
-  warning: { color: Colors.warning },
-  error: { color: Colors.error },
-  info: { color: Colors.info },
-};
-
 export function Badge({ children, variant = 'default', style }: BadgeProps) {
+  const colors = useThemeColors();
+  const themedBgStyles: Record<BadgeVariant, ViewStyle> = {
+    default: { backgroundColor: colors.backgroundElement },
+    success: { backgroundColor: colors.successLight },
+    warning: { backgroundColor: colors.warningLight },
+    error: { backgroundColor: colors.errorLight },
+    info: { backgroundColor: colors.infoLight },
+  };
+  const themedTextStyles: Record<BadgeVariant, TextStyle> = {
+    default: { color: colors.textSecondary },
+    success: { color: colors.success },
+    warning: { color: colors.warning },
+    error: { color: colors.error },
+    info: { color: colors.info },
+  };
+
   return (
-    <View style={[styles.base, bgStyles[variant], style]}>
-      <Text style={[styles.text, textStyles[variant]]}>{children}</Text>
+    <View style={[styles.base, themedBgStyles[variant], style]}>
+      <Text style={[styles.text, themedTextStyles[variant]]}>{children}</Text>
     </View>
   );
 }

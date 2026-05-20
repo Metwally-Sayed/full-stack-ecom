@@ -1,23 +1,38 @@
-import { StyleSheet, View, type ViewStyle } from 'react-native';
+import { StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { Colors } from '@/constants/colors';
 import { BorderRadius, Spacing } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 
 type CardProps = {
   children: React.ReactNode;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
   padding?: number;
 };
 
 export function Card({ children, style, padding = Spacing.base }: CardProps) {
-  return <View style={[styles.card, { padding }, style]}>{children}</View>;
+  const colors = useThemeColors();
+
+  return (
+    <View
+      style={[
+        styles.card,
+        {
+          padding,
+          backgroundColor: colors.background,
+          borderColor: colors.border,
+        },
+        style,
+      ]}
+    >
+      {children}
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.background,
     borderRadius: BorderRadius.xl,
     borderWidth: 1,
-    borderColor: Colors.border,
     shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.06,

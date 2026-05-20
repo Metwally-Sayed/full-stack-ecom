@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 import { Text } from '@/components/ui/text';
 import { Button } from '@/components/ui/button';
-import { Colors } from '@/constants/colors';
-import { BorderRadius, FontSize, Spacing } from '@/constants/spacing';
+import { FontSize, Spacing } from '@/constants/spacing';
 import { formatPrice } from '@/lib/format';
+import { useThemeColors } from '@/stores/theme-store';
 
 type CartSummaryProps = {
   subtotal: number;
@@ -13,13 +13,23 @@ type CartSummaryProps = {
 };
 
 export function CartSummary({ subtotal, itemCount, onCheckout, loading }: CartSummaryProps) {
+  const colors = useThemeColors();
+
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {
+          backgroundColor: colors.background,
+          borderColor: colors.border,
+        },
+      ]}
+    >
       <View style={styles.row}>
-        <Text variant="body" color={Colors.textSecondary}>
+        <Text variant="body" color={colors.textSecondary}>
           {itemCount} item{itemCount !== 1 ? 's' : ''}
         </Text>
-        <Text style={styles.subtotal}>{formatPrice(subtotal)}</Text>
+        <Text style={[styles.subtotal, { color: colors.text }]}>{formatPrice(subtotal)}</Text>
       </View>
       <Button onPress={onCheckout} loading={loading} fullWidth size="lg">
         Place Order
@@ -33,8 +43,6 @@ const styles = StyleSheet.create({
     padding: Spacing.base,
     paddingBottom: Spacing.xl,
     borderTopWidth: 1,
-    borderColor: Colors.border,
-    backgroundColor: Colors.background,
     gap: Spacing.md,
   },
   row: {
@@ -42,5 +50,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  subtotal: { fontSize: FontSize.xl, fontWeight: '700', color: Colors.text },
+  subtotal: { fontSize: FontSize.xl, fontWeight: '700' },
 });

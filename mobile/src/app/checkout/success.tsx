@@ -7,15 +7,17 @@ import { Button } from '@/components/ui/button';
 import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
 import { shortenId } from '@/lib/format';
+import { useThemeColors } from '@/stores/theme-store';
 
 export default function CheckoutSuccessScreen() {
   const { orderId } = useLocalSearchParams<{ orderId?: string }>();
+  const colors = useThemeColors();
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.content}>
-        <View style={styles.iconWrapper}>
-          <CheckCircle size={72} color={Colors.success} />
+        <View style={[styles.iconWrapper, { backgroundColor: colors.successLight }]}>
+          <CheckCircle size={72} color={colors.success} />
         </View>
 
         <Text variant="h2" style={styles.title}>Order Placed!</Text>
@@ -24,7 +26,7 @@ export default function CheckoutSuccessScreen() {
         </Text>
 
         {orderId ? (
-          <View style={styles.orderIdBadge}>
+          <View style={[styles.orderIdBadge, { backgroundColor: colors.backgroundSecondary }]}>
             <Text variant="label" color={Colors.textSecondary}>Order ID</Text>
             <Text variant="h3" color={Colors.primary}>{shortenId(orderId)}</Text>
           </View>
@@ -55,7 +57,6 @@ export default function CheckoutSuccessScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
     justifyContent: 'space-between',
     padding: Spacing.base,
   },
@@ -69,7 +70,6 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: Colors.successLight,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: Spacing.sm,
@@ -79,7 +79,6 @@ const styles = StyleSheet.create({
   orderIdBadge: {
     alignItems: 'center',
     gap: 4,
-    backgroundColor: Colors.backgroundSecondary,
     paddingHorizontal: Spacing.xl,
     paddingVertical: Spacing.md,
     borderRadius: 16,

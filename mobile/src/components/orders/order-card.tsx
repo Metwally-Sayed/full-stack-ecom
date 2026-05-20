@@ -5,15 +5,24 @@ import { Text } from '@/components/ui/text';
 import { OrderStatusBadge } from '@/components/ui/badge';
 import { Colors } from '@/constants/colors';
 import { BorderRadius, FontSize, Spacing } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 import { formatDate, formatPrice, shortenId } from '@/lib/format';
 import type { Order } from '@/types/order';
 
 type OrderCardProps = { order: Order };
 
 export function OrderCard({ order }: OrderCardProps) {
+  const colors = useThemeColors();
+
   return (
     <TouchableOpacity
-      style={styles.card}
+      style={[
+        styles.card,
+        {
+          backgroundColor: colors.background,
+          borderColor: colors.border,
+        },
+      ]}
       onPress={() => router.push(`/orders/${order.id}`)}
       activeOpacity={0.8}
     >
@@ -30,8 +39,8 @@ export function OrderCard({ order }: OrderCardProps) {
         </Text>
       </View>
       <View style={styles.bottom}>
-        <Text style={styles.total}>{formatPrice(order.totalAmount)}</Text>
-        <ChevronRight size={18} color={Colors.textMuted} />
+        <Text style={[styles.total, { color: colors.text }]}>{formatPrice(order.totalAmount)}</Text>
+        <ChevronRight size={18} color={colors.textMuted} />
       </View>
     </TouchableOpacity>
   );
@@ -39,10 +48,8 @@ export function OrderCard({ order }: OrderCardProps) {
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: Colors.background,
     borderRadius: BorderRadius.xl,
     borderWidth: 1,
-    borderColor: Colors.border,
     padding: Spacing.base,
     gap: Spacing.sm,
     shadowColor: Colors.black,
@@ -55,5 +62,5 @@ const styles = StyleSheet.create({
   id: { fontSize: FontSize.base, fontWeight: '700' },
   mid: { flexDirection: 'row', justifyContent: 'space-between' },
   bottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  total: { fontSize: FontSize.lg, fontWeight: '700', color: Colors.text },
+  total: { fontSize: FontSize.lg, fontWeight: '700' },
 });

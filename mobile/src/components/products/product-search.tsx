@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { Search, X } from 'lucide-react-native';
-import { Colors } from '@/constants/colors';
 import { BorderRadius, FontSize, Spacing } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 
 type ProductSearchProps = {
   value: string;
@@ -14,15 +14,17 @@ export function ProductSearch({
   onChangeText,
   placeholder = 'Search products…',
 }: ProductSearchProps) {
+  const colors = useThemeColors();
+
   return (
-    <View style={styles.wrapper}>
-      <Search size={18} color={Colors.textMuted} style={styles.icon} />
+    <View style={[styles.wrapper, { backgroundColor: colors.backgroundElement }]}>
+      <Search size={18} color={colors.textMuted} style={styles.icon} />
       <TextInput
-        style={styles.input}
+        style={[styles.input, { color: colors.text }]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={Colors.textMuted}
+        placeholderTextColor={colors.textMuted}
         returnKeyType="search"
         autoCapitalize="none"
         autoCorrect={false}
@@ -30,7 +32,7 @@ export function ProductSearch({
       />
       {value.length > 0 ? (
         <TouchableOpacity onPress={() => onChangeText('')} hitSlop={8}>
-          <X size={16} color={Colors.textMuted} />
+          <X size={16} color={colors.textMuted} />
         </TouchableOpacity>
       ) : null}
     </View>
@@ -41,7 +43,6 @@ const styles = StyleSheet.create({
   wrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.backgroundElement,
     borderRadius: BorderRadius.xl,
     paddingHorizontal: Spacing.md,
     paddingVertical: Spacing.xs + 2,
@@ -51,7 +52,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: FontSize.sm,
-    color: Colors.text,
     padding: 0,
   },
 });

@@ -9,11 +9,11 @@ import { Button } from '@/components/ui/button';
 import { ErrorState } from '@/components/ui/error-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import { QuantityStepper } from '@/components/cart/quantity-stepper';
-import { OrderStatusBadge } from '@/components/ui/badge';
 import { Colors } from '@/constants/colors';
-import { BorderRadius, FontSize, Spacing } from '@/constants/spacing';
+import { FontSize, Spacing } from '@/constants/spacing';
 import { useProduct } from '@/hooks/use-product';
 import { useCartStore } from '@/stores/cart-store';
+import { useThemeColors } from '@/stores/theme-store';
 import { formatPrice } from '@/lib/format';
 
 function ProductDetailSkeleton() {
@@ -38,6 +38,7 @@ export default function ProductDetailScreen() {
   const { product, isLoading, isError, refetch } = useProduct(id);
   const addItem = useCartStore((s) => s.addItem);
   const [qty, setQty] = useState(1);
+  const colors = useThemeColors();
 
   function handleAddToCart() {
     if (!product) return;
@@ -55,31 +56,44 @@ export default function ProductDetailScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Image
           source={product.imageUrl ?? 'https://placehold.co/800x800/F3F4F6/9CA3AF?text=No+Image'}
-          style={styles.image}
+          style={[styles.image, { backgroundColor: colors.backgroundElement }]}
           contentFit="cover"
           transition={200}
         />
         <View style={styles.body}>
           {product.category ? (
-            <Text variant="caption" style={styles.category}>{product.category.name}</Text>
+            <Text variant="caption" style={[styles.category, { color: colors.primary }]}>
+              {product.category.name}
+            </Text>
           ) : null}
           <Text variant="h2" style={styles.name}>{product.name}</Text>
-          <Text style={styles.price}>{formatPrice(product.price)}</Text>
+          <Text style={[styles.price, { color: colors.primary }]}>{formatPrice(product.price)}</Text>
 
           {product.description ? (
             <View style={styles.descSection}>
-              <Text variant="label" style={styles.descLabel}>Description</Text>
+              <Text variant="label" style={[styles.descLabel, { color: colors.textSecondary }]}>
+                Description
+              </Text>
               <Text variant="body" color={Colors.textSecondary}>{product.description}</Text>
             </View>
           ) : null}
         </View>
       </ScrollView>
 
-      <View style={[styles.footer, { paddingBottom: Spacing.base + insets.bottom }]}>
+      <View
+        style={[
+          styles.footer,
+          {
+            paddingBottom: Spacing.base + insets.bottom,
+            backgroundColor: colors.background,
+            borderColor: colors.border,
+          },
+        ]}
+      >
         <View style={styles.footerTop}>
           <Text variant="label">Quantity</Text>
           <QuantityStepper
@@ -91,7 +105,9 @@ export default function ProductDetailScreen() {
         <View style={styles.footerBottom}>
           <View>
             <Text variant="caption">Total</Text>
-            <Text style={styles.total}>{formatPrice(product.price * qty)}</Text>
+            <Text style={[styles.total, { color: colors.text }]}>
+              {formatPrice(product.price * qty)}
+            </Text>
           </View>
           <Button onPress={handleAddToCart} size="lg" style={styles.addBtn}>
             Add to Cart
@@ -103,25 +119,22 @@ export default function ProductDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1 },
   skeletonContent: { flexGrow: 1 },
   image: {
     width: '100%',
     height: 320,
-    backgroundColor: Colors.backgroundElement,
   },
   body: { padding: Spacing.base, gap: Spacing.sm },
-  category: { color: Colors.primary, textTransform: 'uppercase', letterSpacing: 0.5 },
+  category: { textTransform: 'uppercase', letterSpacing: 0.5 },
   name: { marginTop: 2 },
-  price: { fontSize: FontSize['2xl'], fontWeight: '800', color: Colors.primary },
+  price: { fontSize: FontSize['2xl'], fontWeight: '800' },
   descSection: { marginTop: Spacing.sm, gap: Spacing.sm },
-  descLabel: { color: Colors.textSecondary },
+  descLabel: {},
   footer: {
     borderTopWidth: 1,
-    borderColor: Colors.border,
     padding: Spacing.base,
     gap: Spacing.md,
-    backgroundColor: Colors.background,
   },
   footerTop: {
     flexDirection: 'row',
@@ -133,6 +146,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-  total: { fontSize: FontSize.xl, fontWeight: '800', color: Colors.text },
+  total: { fontSize: FontSize.xl, fontWeight: '800' },
   addBtn: { flex: 1, marginLeft: Spacing.base },
 });

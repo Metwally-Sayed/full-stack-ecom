@@ -11,6 +11,7 @@ import { CartSummary } from '@/components/cart/cart-summary';
 import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
 import { useCartStore } from '@/stores/cart-store';
+import { useThemeColors } from '@/stores/theme-store';
 import { useCheckout } from '@/hooks/use-checkout';
 import { getErrorMessage } from '@/lib/api';
 
@@ -20,6 +21,7 @@ export default function CartScreen() {
   const totalItems = useCartStore((s) => s.totalItems());
   const subtotal = useCartStore((s) => s.subtotal());
   const checkout = useCheckout();
+  const colors = useThemeColors();
 
   async function handleCheckout() {
     if (items.length === 0) return;
@@ -33,7 +35,7 @@ export default function CartScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: insets.top + Spacing.sm }]}>
         <Text variant="h2">My Cart</Text>
         {totalItems > 0 ? (
@@ -75,7 +77,7 @@ export default function CartScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1 },
   header: {
     flexDirection: 'row',
     alignItems: 'baseline',

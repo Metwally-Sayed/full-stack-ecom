@@ -7,6 +7,7 @@ import { Text } from '@/components/ui/text';
 import { Colors } from '@/constants/colors';
 import { BorderRadius, FontSize, Spacing } from '@/constants/spacing';
 import { useCartStore } from '@/stores/cart-store';
+import { useThemeColors } from '@/stores/theme-store';
 import { formatPrice } from '@/lib/format';
 import type { Product } from '@/types/product';
 
@@ -16,6 +17,7 @@ type ProductCardProps = {
 
 export function ProductCard({ product }: ProductCardProps) {
   const addItem = useCartStore((s) => s.addItem);
+  const colors = useThemeColors();
 
   function handleAddToCart() {
     addItem(product);
@@ -24,13 +26,19 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <TouchableOpacity
-      style={styles.card}
+      style={[
+        styles.card,
+        {
+          backgroundColor: colors.background,
+          borderColor: colors.border,
+        },
+      ]}
       onPress={() => router.push(`/product/${product.id}`)}
       activeOpacity={0.85}
     >
       <Image
         source={product.imageUrl ?? 'https://placehold.co/400x400/F3F4F6/9CA3AF?text=No+Image'}
-        style={styles.image}
+        style={[styles.image, { backgroundColor: colors.backgroundElement }]}
         contentFit="cover"
         transition={200}
       />
@@ -39,14 +47,18 @@ export function ProductCard({ product }: ProductCardProps) {
           {product.name}
         </Text>
         {product.category ? (
-          <Text variant="caption" numberOfLines={1} style={styles.category}>
+          <Text
+            variant="caption"
+            numberOfLines={1}
+            style={[styles.category, { color: colors.textMuted }]}
+          >
             {product.category.name}
           </Text>
         ) : null}
         <View style={styles.footer}>
-          <Text style={styles.price}>{formatPrice(product.price)}</Text>
+          <Text style={[styles.price, { color: colors.primary }]}>{formatPrice(product.price)}</Text>
           <TouchableOpacity
-            style={styles.cartBtn}
+            style={[styles.cartBtn, { backgroundColor: colors.primary }]}
             onPress={handleAddToCart}
             hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
           >
@@ -61,10 +73,8 @@ export function ProductCard({ product }: ProductCardProps) {
 const styles = StyleSheet.create({
   card: {
     flex: 1,
-    backgroundColor: Colors.background,
     borderRadius: BorderRadius.xl,
     borderWidth: 1,
-    borderColor: Colors.border,
     overflow: 'hidden',
     shadowColor: Colors.black,
     shadowOffset: { width: 0, height: 1 },
@@ -75,18 +85,17 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     aspectRatio: 1,
-    backgroundColor: Colors.backgroundElement,
   },
   body: { padding: Spacing.md, gap: 4 },
   name: { fontSize: FontSize.sm, lineHeight: 18 },
-  category: { color: Colors.textMuted },
+  category: {},
   footer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 4,
   },
-  price: { fontSize: FontSize.base, fontWeight: '700', color: Colors.primary },
+  price: { fontSize: FontSize.base, fontWeight: '700' },
   cartBtn: {
     width: 30,
     height: 30,

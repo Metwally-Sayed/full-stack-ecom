@@ -1,13 +1,13 @@
-import { ScrollView, StyleSheet, View, type ViewStyle } from 'react-native';
+import { ScrollView, StyleSheet, View, type StyleProp, type ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 
 type ScreenProps = {
   children: React.ReactNode;
   scrollable?: boolean;
-  style?: ViewStyle;
-  contentStyle?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
+  contentStyle?: StyleProp<ViewStyle>;
   edges?: ('top' | 'bottom' | 'left' | 'right')[];
 };
 
@@ -18,9 +18,12 @@ export function Screen({
   contentStyle,
   edges = ['top', 'left', 'right'],
 }: ScreenProps) {
+  const colors = useThemeColors();
+  const backgroundStyle = { backgroundColor: colors.background };
+
   if (scrollable) {
     return (
-      <SafeAreaView style={[styles.safeArea, style]} edges={edges}>
+      <SafeAreaView style={[styles.safeArea, backgroundStyle, style]} edges={edges}>
         <ScrollView
           style={styles.scroll}
           contentContainerStyle={[styles.scrollContent, contentStyle]}
@@ -34,7 +37,7 @@ export function Screen({
   }
 
   return (
-    <SafeAreaView style={[styles.safeArea, style]} edges={edges}>
+    <SafeAreaView style={[styles.safeArea, backgroundStyle, style]} edges={edges}>
       <View style={[styles.content, contentStyle]}>{children}</View>
     </SafeAreaView>
   );
@@ -43,7 +46,6 @@ export function Screen({
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.background,
   },
   scroll: { flex: 1 },
   scrollContent: {

@@ -2,8 +2,8 @@ import { StyleSheet, View, type ViewStyle } from 'react-native';
 import { AlertCircle } from 'lucide-react-native';
 import { Text } from './text';
 import { Button } from './button';
-import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 
 type ErrorStateProps = {
   message?: string;
@@ -16,13 +16,17 @@ export function ErrorState({
   onRetry,
   style,
 }: ErrorStateProps) {
+  const colors = useThemeColors();
+
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.iconWrapper}>
-        <AlertCircle size={40} color={Colors.error} />
+      <View style={[styles.iconWrapper, { backgroundColor: colors.errorLight }]}>
+        <AlertCircle size={40} color={colors.error} />
       </View>
       <Text variant="h3" style={styles.title}>Oops!</Text>
-      <Text variant="body" style={styles.message}>{message}</Text>
+      <Text variant="body" style={[styles.message, { color: colors.textSecondary }]}>
+        {message}
+      </Text>
       {onRetry ? (
         <Button onPress={onRetry} variant="outline" style={styles.retryBtn}>
           Try Again
@@ -44,12 +48,11 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: Colors.errorLight,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: Spacing.sm,
   },
   title: { textAlign: 'center' },
-  message: { textAlign: 'center', color: Colors.textSecondary },
+  message: { textAlign: 'center' },
   retryBtn: { marginTop: Spacing.sm },
 });

@@ -15,6 +15,7 @@ import { login } from '@/services/auth.service';
 import { saveAccessToken, saveRefreshToken } from '@/lib/storage';
 import { getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
+import { useThemeColors } from '@/stores/theme-store';
 
 const schema = z.object({
   email: z.string().email('Enter a valid email'),
@@ -25,6 +26,7 @@ type FormData = z.infer<typeof schema>;
 export default function LoginScreen() {
   const [loading, setLoading] = useState(false);
   const setUser = useAuthStore((s) => s.setUser);
+  const colors = useThemeColors();
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -58,7 +60,7 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.kav}
+      style={[styles.kav, { backgroundColor: colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
@@ -68,7 +70,7 @@ export default function LoginScreen() {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.header}>
-            <View style={styles.logoCircle}>
+            <View style={[styles.logoCircle, { backgroundColor: colors.primary }]}>
               <Text style={styles.logoText}>M</Text>
             </View>
             <Text variant="h2" style={styles.title}>Mini Shop</Text>
@@ -136,7 +138,7 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  kav: { flex: 1, backgroundColor: Colors.background },
+  kav: { flex: 1 },
   safe: { flex: 1 },
   content: {
     flexGrow: 1,
@@ -149,7 +151,6 @@ const styles = StyleSheet.create({
     width: 72,
     height: 72,
     borderRadius: 36,
-    backgroundColor: Colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },

@@ -7,9 +7,9 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { ErrorState } from '@/components/ui/error-state';
 import { Skeleton, SkeletonGroup } from '@/components/ui/skeleton';
 import { OrderCard } from '@/components/orders/order-card';
-import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
 import { useOrders } from '@/hooks/use-orders';
+import { useThemeColors } from '@/stores/theme-store';
 
 function OrdersSkeleton() {
   return (
@@ -29,6 +29,7 @@ export default function OrdersScreen() {
   const insets = useSafeAreaInsets();
   const [refreshing, setRefreshing] = useState(false);
   const { orders, isLoading, isError, refetch } = useOrders();
+  const colors = useThemeColors();
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
@@ -37,7 +38,7 @@ export default function OrdersScreen() {
   }, [refetch]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { paddingTop: insets.top + Spacing.sm }]}>
         <Text variant="h2">My Orders</Text>
       </View>
@@ -60,7 +61,7 @@ export default function OrdersScreen() {
           contentContainerStyle={styles.list}
           showsVerticalScrollIndicator={false}
           refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={Colors.primary} />
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />
           }
         />
       )}
@@ -69,7 +70,7 @@ export default function OrdersScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1 },
   header: {
     paddingHorizontal: Spacing.base,
     paddingBottom: Spacing.md,

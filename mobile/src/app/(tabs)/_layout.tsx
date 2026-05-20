@@ -6,6 +6,7 @@ import { Text } from '@/components/ui/text';
 import { Colors } from '@/constants/colors';
 import { useAuthStore } from '@/stores/auth-store';
 import { useCartStore } from '@/stores/cart-store';
+import { useThemeColors } from '@/stores/theme-store';
 
 function CartIcon({ color, focused }: { color: string; focused: boolean }) {
   const totalItems = useCartStore((s) => s.totalItems());
@@ -24,6 +25,7 @@ function CartIcon({ color, focused }: { color: string; focused: boolean }) {
 export default function TabsLayout() {
   const { isAuthenticated, isLoading } = useAuthStore();
   const insets = useSafeAreaInsets();
+  const colors = useThemeColors();
 
   if (!isLoading && !isAuthenticated) {
     return <Redirect href="/(auth)/login" />;
@@ -33,9 +35,17 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: Colors.primary,
-        tabBarInactiveTintColor: Colors.textMuted,
-        tabBarStyle: [styles.tabBar, { height: 56 + insets.bottom, paddingBottom: insets.bottom + 4 }],
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textMuted,
+        tabBarStyle: [
+          styles.tabBar,
+          {
+            height: 56 + insets.bottom,
+            paddingBottom: insets.bottom + 4,
+            backgroundColor: colors.background,
+            borderTopColor: colors.border,
+          },
+        ],
         tabBarLabelStyle: styles.tabLabel,
       }}
     >
@@ -79,8 +89,6 @@ export default function TabsLayout() {
 
 const styles = StyleSheet.create({
   tabBar: {
-    backgroundColor: Colors.background,
-    borderTopColor: Colors.border,
     borderTopWidth: StyleSheet.hairlineWidth,
     paddingTop: 4,
   },

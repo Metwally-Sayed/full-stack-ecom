@@ -9,11 +9,11 @@ import { ProductGrid } from '@/components/products/product-grid';
 import { ProductListSkeleton } from '@/components/products/product-list-skeleton';
 import { CategoryTabs } from '@/components/products/category-tabs';
 import { ProductSearch } from '@/components/products/product-search';
-import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
 import { useProducts } from '@/hooks/use-products';
 import { useCategories } from '@/hooks/use-categories';
 import { useDebounce } from '@/hooks/use-debounce';
+import { useThemeColors } from '@/stores/theme-store';
 
 export default function ShopScreen() {
   const insets = useSafeAreaInsets();
@@ -21,6 +21,7 @@ export default function ShopScreen() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const queryClient = useQueryClient();
+  const colors = useThemeColors();
 
   const debouncedSearch = useDebounce(search, 350);
   const { categories } = useCategories();
@@ -37,9 +38,14 @@ export default function ShopScreen() {
   }, [queryClient]);
 
   return (
-    <View style={[styles.container, { paddingTop: insets.top }]}>
+    <View style={[styles.container, { paddingTop: insets.top, backgroundColor: colors.background }]}>
       {/* Search + categories in one tight block */}
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          { backgroundColor: colors.background, borderBottomColor: colors.border },
+        ]}
+      >
         <View
           style={[
             styles.searchContainer,
@@ -62,7 +68,7 @@ export default function ShopScreen() {
       {isFetching && !isLoading && (
         <ActivityIndicator
           size="small"
-          color={Colors.primary}
+          color={colors.primary}
           style={styles.fetchingIndicator}
         />
       )}
@@ -75,7 +81,7 @@ export default function ShopScreen() {
           <RefreshControl
             refreshing={refreshing}
             onRefresh={onRefresh}
-            tintColor={Colors.primary}
+            tintColor={colors.primary}
           />
         }
       >
@@ -99,13 +105,11 @@ export default function ShopScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: Colors.background },
+  container: { flex: 1 },
   header: {
-    backgroundColor: Colors.background,
     paddingTop: Spacing.sm,
     gap: Spacing.xs,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderBottomColor: Colors.border,
   },
   searchContainer: {
     paddingHorizontal: Spacing.base,

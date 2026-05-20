@@ -9,6 +9,7 @@ import { OrderItemsList } from '@/components/orders/order-items-list';
 import { Colors } from '@/constants/colors';
 import { FontSize, Spacing } from '@/constants/spacing';
 import { useOrder } from '@/hooks/use-order';
+import { useThemeColors } from '@/stores/theme-store';
 import { formatDate, formatPrice, shortenId } from '@/lib/format';
 
 function OrderDetailSkeleton() {
@@ -36,6 +37,7 @@ function OrderDetailSkeleton() {
 export default function OrderDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const { order, isLoading, isError, refetch } = useOrder(id);
+  const colors = useThemeColors();
 
   if (isLoading) return <OrderDetailSkeleton />;
   if (isError || !order) {
@@ -43,7 +45,10 @@ export default function OrderDetailScreen() {
   }
 
   return (
-    <ScrollView style={styles.scroll} contentContainerStyle={styles.content}>
+    <ScrollView
+      style={[styles.scroll, { backgroundColor: colors.backgroundSecondary }]}
+      contentContainerStyle={styles.content}
+    >
       <Card style={styles.summaryCard}>
         <View style={styles.summaryRow}>
           <Text variant="label" color={Colors.textSecondary}>Order ID</Text>
@@ -57,9 +62,11 @@ export default function OrderDetailScreen() {
           <Text variant="label" color={Colors.textSecondary}>Date</Text>
           <Text variant="body">{formatDate(order.createdAt)}</Text>
         </View>
-        <View style={[styles.summaryRow, styles.totalRow]}>
+        <View style={[styles.summaryRow, styles.totalRow, { borderColor: colors.border }]}>
           <Text variant="label" color={Colors.textSecondary}>Total</Text>
-          <Text style={styles.totalAmount}>{formatPrice(order.totalAmount)}</Text>
+          <Text style={[styles.totalAmount, { color: colors.primary }]}>
+            {formatPrice(order.totalAmount)}
+          </Text>
         </View>
       </Card>
 
@@ -76,7 +83,7 @@ export default function OrderDetailScreen() {
 }
 
 const styles = StyleSheet.create({
-  scroll: { flex: 1, backgroundColor: Colors.backgroundSecondary },
+  scroll: { flex: 1 },
   content: { padding: Spacing.base, gap: Spacing.base },
   skeletonContent: { padding: Spacing.base, gap: Spacing.xl },
   skeletonRow: { flexDirection: 'row', gap: Spacing.md, alignItems: 'center' },
@@ -89,12 +96,11 @@ const styles = StyleSheet.create({
   },
   totalRow: {
     borderTopWidth: 1,
-    borderColor: Colors.border,
     paddingTop: Spacing.md,
     marginTop: Spacing.sm,
   },
   orderId: { fontSize: FontSize.base, fontWeight: '700' },
-  totalAmount: { fontSize: FontSize.xl, fontWeight: '800', color: Colors.primary },
+  totalAmount: { fontSize: FontSize.xl, fontWeight: '800' },
   itemsSection: { gap: Spacing.md },
   sectionTitle: {},
 });

@@ -15,6 +15,7 @@ import { register } from '@/services/auth.service';
 import { saveAccessToken, saveRefreshToken } from '@/lib/storage';
 import { getErrorMessage } from '@/lib/api';
 import { useAuthStore } from '@/stores/auth-store';
+import { useThemeColors } from '@/stores/theme-store';
 
 const schema = z
   .object({
@@ -33,6 +34,7 @@ type FormData = z.infer<typeof schema>;
 export default function RegisterScreen() {
   const [loading, setLoading] = useState(false);
   const setUser = useAuthStore((s) => s.setUser);
+  const colors = useThemeColors();
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -57,7 +59,7 @@ export default function RegisterScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.kav}
+      style={[styles.kav, { backgroundColor: colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
@@ -120,7 +122,7 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  kav: { flex: 1, backgroundColor: Colors.background },
+  kav: { flex: 1 },
   safe: { flex: 1 },
   content: {
     flexGrow: 1,

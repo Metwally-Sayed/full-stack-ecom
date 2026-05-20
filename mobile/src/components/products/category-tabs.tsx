@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { Text } from '@/components/ui/text';
-import { Colors } from '@/constants/colors';
 import { FontSize, Spacing } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 import type { Category } from '@/types/category';
 
 type CategoryTabsProps = {
@@ -11,6 +11,7 @@ type CategoryTabsProps = {
 };
 
 export function CategoryTabs({ categories, selected, onSelect }: CategoryTabsProps) {
+  const colors = useThemeColors();
   const allTab = { id: 'all', name: 'All', slug: null as null };
   const tabs = [allTab, ...categories.map((c) => ({ ...c, slug: c.slug as string | null }))];
 
@@ -29,10 +30,16 @@ export function CategoryTabs({ categories, selected, onSelect }: CategoryTabsPro
             onPress={() => onSelect(tab.slug)}
             activeOpacity={0.7}
           >
-            <Text style={[styles.tabText, isActive && styles.tabTextActive]}>
+            <Text
+              style={[
+                styles.tabText,
+                { color: isActive ? colors.primary : colors.textSecondary },
+                isActive && styles.tabTextActive,
+              ]}
+            >
               {tab.name}
             </Text>
-            {isActive && <View style={styles.indicator} />}
+            {isActive && <View style={[styles.indicator, { backgroundColor: colors.primary }]} />}
           </TouchableOpacity>
         );
       })}
@@ -55,10 +62,8 @@ const styles = StyleSheet.create({
   tabText: {
     fontSize: FontSize.sm,
     fontWeight: '500',
-    color: Colors.textSecondary,
   },
   tabTextActive: {
-    color: Colors.primary,
     fontWeight: '700',
   },
   indicator: {
@@ -68,6 +73,5 @@ const styles = StyleSheet.create({
     right: Spacing.sm,
     height: 2,
     borderRadius: 2,
-    backgroundColor: Colors.primary,
   },
 });

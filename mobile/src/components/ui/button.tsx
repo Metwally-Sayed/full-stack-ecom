@@ -9,6 +9,7 @@ import {
 import { Text } from './text';
 import { Colors } from '@/constants/colors';
 import { BorderRadius, FontSize, Spacing } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 
 type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost' | 'danger';
 type ButtonSize = 'sm' | 'md' | 'lg';
@@ -23,22 +24,6 @@ type ButtonProps = {
   style?: ViewStyle;
   textStyle?: StyleProp<TextStyle>;
   fullWidth?: boolean;
-};
-
-const containerVariant: Record<ButtonVariant, ViewStyle> = {
-  primary: { backgroundColor: Colors.primary },
-  secondary: { backgroundColor: Colors.backgroundElement },
-  outline: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: Colors.primary },
-  ghost: { backgroundColor: 'transparent' },
-  danger: { backgroundColor: Colors.error },
-};
-
-const textVariant: Record<ButtonVariant, TextStyle> = {
-  primary: { color: Colors.white },
-  secondary: { color: Colors.text },
-  outline: { color: Colors.primary },
-  ghost: { color: Colors.primary },
-  danger: { color: Colors.white },
 };
 
 const containerSize: Record<ButtonSize, ViewStyle> = {
@@ -64,9 +49,24 @@ export function Button({
   textStyle,
   fullWidth = false,
 }: ButtonProps) {
+  const colors = useThemeColors();
   const isDisabled = disabled || loading;
   const spinnerColor =
-    variant === 'outline' || variant === 'ghost' ? Colors.primary : Colors.white;
+    variant === 'outline' || variant === 'ghost' ? colors.primary : Colors.white;
+  const themedContainerVariant: Record<ButtonVariant, ViewStyle> = {
+    primary: { backgroundColor: colors.primary },
+    secondary: { backgroundColor: colors.backgroundElement },
+    outline: { backgroundColor: 'transparent', borderWidth: 1.5, borderColor: colors.primary },
+    ghost: { backgroundColor: 'transparent' },
+    danger: { backgroundColor: colors.error },
+  };
+  const themedTextVariant: Record<ButtonVariant, TextStyle> = {
+    primary: { color: Colors.white },
+    secondary: { color: colors.text },
+    outline: { color: colors.primary },
+    ghost: { color: colors.primary },
+    danger: { color: Colors.white },
+  };
 
   return (
     <TouchableOpacity
@@ -74,7 +74,7 @@ export function Button({
       disabled={isDisabled}
       style={[
         styles.base,
-        containerVariant[variant],
+        themedContainerVariant[variant],
         containerSize[size],
         fullWidth && styles.fullWidth,
         isDisabled && styles.disabled,
@@ -85,7 +85,7 @@ export function Button({
       {loading ? (
         <ActivityIndicator size="small" color={spinnerColor} />
       ) : (
-        <Text style={[styles.text, textVariant[variant], textSize[size], textStyle]}>
+        <Text style={[styles.text, themedTextVariant[variant], textSize[size], textStyle]}>
           {children}
         </Text>
       )}

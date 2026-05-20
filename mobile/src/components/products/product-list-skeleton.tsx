@@ -1,11 +1,13 @@
 import { StyleSheet, View } from 'react-native';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BorderRadius, Spacing } from '@/constants/spacing';
-import { Colors } from '@/constants/colors';
+import { useThemeColors } from '@/stores/theme-store';
 
 function ProductSkeletonCard() {
+  const colors = useThemeColors();
+
   return (
-    <View style={styles.card}>
+    <View style={[styles.card, { backgroundColor: colors.background, borderColor: colors.border }]}>
       <Skeleton height={160} borderRadius={0} />
       <View style={styles.body}>
         <Skeleton height={14} width="80%" />
@@ -39,11 +41,9 @@ const styles = StyleSheet.create({
   },
   item: { width: '47.5%' },
   card: {
-    backgroundColor: Colors.background,
     borderRadius: BorderRadius.xl,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: Colors.border,
   },
   body: { padding: Spacing.md, gap: 6 },
   footer: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 4 },

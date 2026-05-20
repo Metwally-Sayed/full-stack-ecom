@@ -2,8 +2,8 @@ import { StyleSheet, View, type ViewStyle } from 'react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import { Text } from './text';
 import { Button } from './button';
-import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 
 type EmptyStateProps = {
   icon: LucideIcon;
@@ -22,14 +22,18 @@ export function EmptyState({
   onAction,
   style,
 }: EmptyStateProps) {
+  const colors = useThemeColors();
+
   return (
     <View style={[styles.container, style]}>
-      <View style={styles.iconWrapper}>
-        <Icon size={40} color={Colors.textMuted} />
+      <View style={[styles.iconWrapper, { backgroundColor: colors.backgroundElement }]}>
+        <Icon size={40} color={colors.textMuted} />
       </View>
       <Text variant="h3" style={styles.title}>{title}</Text>
       {description ? (
-        <Text variant="body" style={styles.description}>{description}</Text>
+        <Text variant="body" style={[styles.description, { color: colors.textSecondary }]}>
+          {description}
+        </Text>
       ) : null}
       {actionLabel && onAction ? (
         <Button onPress={onAction} variant="primary" style={styles.action}>
@@ -52,12 +56,11 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: Colors.backgroundElement,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: Spacing.sm,
   },
   title: { textAlign: 'center' },
-  description: { textAlign: 'center', color: Colors.textSecondary },
+  description: { textAlign: 'center' },
   action: { marginTop: Spacing.sm },
 });

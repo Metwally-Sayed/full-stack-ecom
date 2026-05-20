@@ -1,9 +1,11 @@
 import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { StatusBar } from 'expo-status-bar';
 import Toast from 'react-native-toast-message';
 import { RealtimeBridge } from '@/components/common/realtime-bridge';
 import { useAuthStore } from '@/stores/auth-store';
+import { useThemeColors, useThemeStore } from '@/stores/theme-store';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,11 +26,20 @@ function AuthInitializer() {
 }
 
 export default function RootLayout() {
+  const colors = useThemeColors();
+  const mode = useThemeStore((s) => s.mode);
+  const hydrateTheme = useThemeStore((s) => s.hydrateTheme);
+
+  useEffect(() => {
+    void hydrateTheme();
+  }, [hydrateTheme]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthInitializer />
       <RealtimeBridge />
-      <Stack screenOptions={{ headerShown: false }}>
+      <StatusBar style={mode === 'dark' ? 'light' : 'dark'} backgroundColor={colors.background} />
+      <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.background } }}>
         <Stack.Screen name="index" />
         <Stack.Screen name="(auth)" />
         <Stack.Screen name="(tabs)" />
@@ -38,9 +49,9 @@ export default function RootLayout() {
             headerShown: true,
             headerTitle: '',
             headerBackTitle: 'Back',
-            headerTintColor: '#208AEF',
+            headerTintColor: colors.primary,
             headerShadowVisible: false,
-            headerStyle: { backgroundColor: '#FFFFFF' },
+            headerStyle: { backgroundColor: colors.background },
           }}
         />
         <Stack.Screen
@@ -49,9 +60,9 @@ export default function RootLayout() {
             headerShown: true,
             headerTitle: 'Order Details',
             headerBackTitle: 'Back',
-            headerTintColor: '#208AEF',
+            headerTintColor: colors.primary,
             headerShadowVisible: false,
-            headerStyle: { backgroundColor: '#FFFFFF' },
+            headerStyle: { backgroundColor: colors.background },
           }}
         />
         <Stack.Screen name="checkout/success" />

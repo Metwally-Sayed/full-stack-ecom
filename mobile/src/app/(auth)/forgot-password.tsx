@@ -15,6 +15,7 @@ import { Colors } from '@/constants/colors';
 import { Spacing } from '@/constants/spacing';
 import { forgotPassword } from '@/services/auth.service';
 import { getErrorMessage } from '@/lib/api';
+import { useThemeColors } from '@/stores/theme-store';
 
 const schema = z.object({ email: z.string().email('Enter a valid email') });
 type FormData = z.infer<typeof schema>;
@@ -22,6 +23,7 @@ type FormData = z.infer<typeof schema>;
 export default function ForgotPasswordScreen() {
   const [loading, setLoading] = useState(false);
   const [sent, setSent] = useState(false);
+  const colors = useThemeColors();
 
   const { control, handleSubmit, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -43,7 +45,7 @@ export default function ForgotPasswordScreen() {
   if (sent) {
     return (
       <Screen style={styles.kav} contentStyle={styles.center}>
-        <CheckCircle size={56} color={Colors.success} />
+        <CheckCircle size={56} color={colors.success} />
         <Text variant="h3" style={styles.centered}>Check your email</Text>
         <Text variant="body" color={Colors.textSecondary} style={styles.centered}>
           Password reset instructions have been sent to your email address.
@@ -57,7 +59,7 @@ export default function ForgotPasswordScreen() {
 
   return (
     <KeyboardAvoidingView
-      style={styles.kav}
+      style={[styles.kav, { backgroundColor: colors.background }]}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <SafeAreaView style={styles.safe} edges={['top', 'left', 'right']}>
@@ -102,7 +104,7 @@ export default function ForgotPasswordScreen() {
 }
 
 const styles = StyleSheet.create({
-  kav: { flex: 1, backgroundColor: Colors.background },
+  kav: { flex: 1 },
   safe: { flex: 1 },
   content: { flexGrow: 1, padding: Spacing.base, gap: Spacing['2xl'] },
   center: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: Spacing.base },

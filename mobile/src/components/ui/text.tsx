@@ -1,6 +1,8 @@
 import { Text as RNText, StyleSheet, type StyleProp, type TextStyle } from 'react-native';
 import { Colors } from '@/constants/colors';
+import { lightColors, type AppColors } from '@/constants/palette';
 import { FontSize } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 
 type TextVariant = 'h1' | 'h2' | 'h3' | 'body' | 'bodySmall' | 'caption' | 'label';
 
@@ -22,10 +24,26 @@ const variantStyles: Record<TextVariant, TextStyle> = {
   label: { fontSize: FontSize.sm, fontWeight: '600', lineHeight: 18 },
 };
 
+function resolveColor(color: string | undefined, colors: AppColors) {
+  if (!color) return colors.text;
+
+  const paletteEntry = Object.entries(lightColors).find(([, value]) => value === color);
+  if (!paletteEntry) return color;
+
+  return colors[paletteEntry[0] as keyof AppColors];
+}
+
 export function Text({ children, variant = 'body', color, style, numberOfLines }: TextProps) {
+  const colors = useThemeColors();
+  const textColor = color
+    ? resolveColor(color, colors)
+    : variant === 'caption'
+      ? colors.textSecondary
+      : colors.text;
+
   return (
     <RNText
-      style={[styles.base, variantStyles[variant], color ? { color } : undefined, style]}
+      style={[styles.base, variantStyles[variant], { color: textColor }, style]}
       numberOfLines={numberOfLines}
     >
       {children}

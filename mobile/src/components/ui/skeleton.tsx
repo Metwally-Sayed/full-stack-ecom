@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { Animated, StyleSheet, View, type ViewStyle } from 'react-native';
-import { Colors } from '@/constants/colors';
 import { BorderRadius } from '@/constants/spacing';
+import { useThemeColors } from '@/stores/theme-store';
 
 type SkeletonProps = {
   width?: number | `${number}%`;
@@ -12,6 +12,7 @@ type SkeletonProps = {
 
 export function Skeleton({ width, height = 16, borderRadius = BorderRadius.md, style }: SkeletonProps) {
   const opacity = useRef(new Animated.Value(0.4)).current;
+  const colors = useThemeColors();
 
   useEffect(() => {
     const animation = Animated.loop(
@@ -28,7 +29,7 @@ export function Skeleton({ width, height = 16, borderRadius = BorderRadius.md, s
     <Animated.View
       style={[
         styles.skeleton,
-        { width: width ?? '100%', height, borderRadius, opacity },
+        { width: width ?? '100%', height, borderRadius, opacity, backgroundColor: colors.backgroundElement },
         style,
       ]}
     />
@@ -40,6 +41,6 @@ export function SkeletonGroup({ children }: { children: React.ReactNode }) {
 }
 
 const styles = StyleSheet.create({
-  skeleton: { backgroundColor: Colors.backgroundElement },
+  skeleton: {},
   group: { gap: 8 },
 });
